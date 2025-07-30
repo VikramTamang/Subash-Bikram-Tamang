@@ -1,32 +1,36 @@
-// Handle form submission
-document.getElementById('contact-form').addEventListener('submit', function (e) {
-    e.preventDefault(); // Prevent the default form submission behavior
+document.getElementById('contact-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-    // Get the values from the input fields
-    let fullName = document.getElementById('full-name').value;
-    let email = document.getElementById('email').value;
-    let phoneNumber = document.getElementById('phone-number').value;
-    let subject = document.getElementById('subject').value;
-    let message = document.getElementById('message').value;
-
-    // Create an object to store the data
-    let clientInfo = {
-        fullName: fullName,
-        email: email,
-        phoneNumber: phoneNumber,
-        subject: subject,
-        message: message
+    const clientInfo = {
+        fullName: document.getElementById('full-name').value,
+        email: document.getElementById('email').value,
+        phoneNumber: document.getElementById('phone-number').value,
+        subject: document.getElementById('subject').value,
+        message: document.getElementById('message').value
     };
 
-    // Save the object to localStorage
-    localStorage.setItem('clientInfo', JSON.stringify(clientInfo));
+    try {
+        const response = await fetch('http://localhost:5000/api/contact', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(clientInfo)
+        });
 
-    // Optionally, you can alert the user that their message has been sent
-    alert('Message sent successfully!');
-
-    // Reset the form fields
-    document.getElementById('contact-form').reset();
+        const data = await response.json();
+        if (data.success) {
+            alert('Message sent successfully!');
+            document.getElementById('contact-form').reset();
+        } else {
+            alert('Failed to send message.');
+        }
+    } catch (error) {
+        alert('Error sending message.');
+        console.error(error);
+    }
 });
+
 
 // Retrieve and display stored client information on page load
 window.onload = function () {
