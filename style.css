@@ -235,57 +235,101 @@ section {
     font-size: 7rem;
     margin: 5rem 0;
 }
-.services{
-    background-color: var(--bg-color);
-    color: #080808;
+
+/* Services & Projects */
+.services,
+.projects {
+    padding: 5rem 12%;
+    /* uniform padding */
 }
-.services h2{
-    color: var(--text-color);
+
+.projects {
+    margin-bottom: 5rem;
+    /* uniform gap before contact */
 }
-.services-container{
+
+.services-container,
+.projects-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax (300px, 1fr));
-    align-items: center;
-    gap: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    justify-items: center;
+    align-items: stretch;
 }
-.services-box{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--main-color);
-    height: 600px;
-    border-radius: 3rem;
-    cursor: pointer;
-    border: 5px solid transparent;
-    transition: 0.4s ease-in-out;
-}
-.services-box:hover{
-    background-color: var(--second-bg-color);
-    color: var(--main-color);
-    border: 5px solid var(--main-color);
-    transform: scale(1.03);
-}
-.services-info{
+
+.services-box,
+.project-box {
+    background: var(--main-color);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 350px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transition: all 0.35s ease-in-out;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+}
+
+.services-box:hover,
+.project-box:hover {
+    transform: translateY(-10px) scale(1.03);
+    background: var(--second-bg-color);
+    color: var(--main-color);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+.services-info,
+.project-info {
     text-align: center;
-    justify-content: center;
-    align-items: center;
-    padding: 5rem;
 }
-.services-info i{
-    font-size: 8rem;
+
+.services-info i {
+    font-size: 4.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--bg-color);
 }
-.services-info h4{
-    font-weight: 4rem;
-    margin: 2rem 0;
-    font-weight: 800;
+
+.services-info h4,
+.project-info h4 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
 }
-.services-info p{
-    font-size: 1.4rem;
+
+.services-info p,
+.project-info p {
+    font-size: 1.3rem;
+    font-weight: 500;
+    line-height: 1.6;
+    color: #111;
+}
+
+.project-info a {
+    margin-top: auto;
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background: var(--text-color);
+    color: var(--bg-color);
+    border-radius: 0.6rem;
     font-weight: 600;
-    line-height: 1.7;
+    transition: 0.3s;
 }
+
+.project-info a:hover {
+    background: var(--main-color);
+    color: var(--bg-color);
+}
+
+.services h2,
+.projects h2 {
+    font-size: 4rem;
+    margin-bottom: 3rem;
+    font-weight: 800;
+    color: var(--text-color);
+}
+
+/* Contact */
 .contact {
     background-color: var(--second-bg-color);
     padding: 5rem 12%;
@@ -330,6 +374,8 @@ section {
     margin: 1.5rem 0;
     resize: none;
 }
+
+/* Footer */
 .footer{
     background-color: var(--bg-color);
     padding: 50px 0;
