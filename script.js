@@ -1,48 +1,45 @@
-document.getElementById('contact-form').addEventListener('submit', async function (e) {
+// -------------------- CONTACT FORM SUBMIT (GMAIL ONLY) --------------------
+document.getElementById('contact-form').addEventListener('submit', function (e) {
     e.preventDefault();
 
-    const clientInfo = {
-        fullName: document.getElementById('full-name').value,
-        email: document.getElementById('email').value,
-        phoneNumber: document.getElementById('phone-number').value,
-        subject: document.getElementById('subject').value,
-        message: document.getElementById('message').value
-    };
+    const fullName = document.getElementById('full-name').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone-number').value;
+    const subject = document.getElementById('subject').value;   // <-- MUST MATCH HTML ID
+    const message = document.getElementById('message').value;
 
-    try {
-        const response = await fetch('http://localhost:5000/api/contact', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(clientInfo)
-        });
+    const body = encodeURIComponent(
+        `From: ${fullName} (${email})\n` +
+        `Phone: ${phone}\n\n` +
+        `Message:\n${message}`
+    );
 
-        const data = await response.json();
-        if (data.success) {
-            alert('Message sent successfully!');
-            document.getElementById('contact-form').reset();
-        } else {
-            alert('Failed to send message.');
-        }
-    } catch (error) {
-        alert('Error sending message.');
-        console.error(error);
-    }
+    const gmailUrl =
+        `https://mail.google.com/mail/?view=cm&fs=1&to=subastv.04@gmail.com` +
+        `&su=${encodeURIComponent(subject)}` +
+        `&body=${body}`;
+
+    window.open(gmailUrl, "_blank");
+    document.getElementById('contact-form').reset();
+});
+
+// -------------------- GMAIL ICON CLICK (HEADER + FOOTER) --------------------
+function openGmailDirect() {
+    const gmailUrl =
+        `https://mail.google.com/mail/?view=cm&fs=1&to=subastv.04@gmail.com` +
+        `&su=${encodeURIComponent("Contact via Portfolio")}` +
+        `&body=${encodeURIComponent("Hello Subash, I want to connect with you.")}`;
+
+    window.open(gmailUrl, "_blank");
+}
+
+// Make sure IDs exist in your HTML
+document.querySelectorAll('#gmail-icon').forEach(icon => {
+    icon.addEventListener('click', openGmailDirect);
 });
 
 
-// Retrieve and display stored client information on page load
-window.onload = function () {
-    let clientInfo = JSON.parse(localStorage.getItem('clientInfo'));
-
-    if (clientInfo) {
-        console.log('Client Information:', clientInfo);
-        // You can update the UI with the client's information if needed
-    }
-};
-
-// Handle menu icon click for mobile view
+// -------------------- MOBILE NAV --------------------
 let menuIcon = document.querySelector('#menu-icon');
 let navbar = document.querySelector('.navbar');
 
@@ -51,7 +48,8 @@ menuIcon.onclick = () => {
     navbar.classList.toggle('active');
 };
 
-// Highlight the active section in the navbar
+
+// -------------------- NAV ACTIVE LINK HIGHLIGHT --------------------
 let sections = document.querySelectorAll('section');
 let navLinks = document.querySelectorAll('header nav a');
 
@@ -63,10 +61,10 @@ window.onscroll = () => {
         let id = sec.getAttribute('id');
 
         if (top >= offset && top < offset + height) {
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                document.querySelector('header nav a[href*=' + id + ']').classList.add('active');
-            });
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            let activeLink = document.querySelector(`header nav a[href*=${id}]`);
+            if (activeLink) activeLink.classList.add('active');
         }
     });
 };
