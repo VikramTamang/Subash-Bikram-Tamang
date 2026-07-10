@@ -3,6 +3,7 @@ import html
 import urllib.request
 
 SKIP = {"Subash-Bikram-Tamang"}
+USER_AGENT = "portfolio-generator"
 
 
 def display_name(name):
@@ -64,6 +65,19 @@ def tech_spans(lang, name=""):
     return ["GitHub"]
 
 
+def live_demo_url(name, homepage=None):
+    return (homepage or f"https://vikramtamang.github.io/{name}/").rstrip("/") + "/"
+
+
+def url_is_live(url):
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    try:
+        with urllib.request.urlopen(request, timeout=15) as response:
+            return 200 <= response.status < 400
+    except Exception:
+        return False
+
+
 def card(project, demo=False):
     tech = "".join(f"<span>{html.escape(t)}</span>" for t in project["tech"])
     code_label = "Code" if demo else "View Code"
@@ -101,7 +115,9 @@ for repo in repos:
     name = repo["name"]
     deploy = ""
     if repo.get("has_pages"):
-        deploy = repo.get("homepage") or f"https://vikramtamang.github.io/{name}/"
+        candidate = live_demo_url(name, repo.get("homepage"))
+        if url_is_live(candidate):
+            deploy = candidate
 
     entry = {
         "name": name,
@@ -147,14 +163,27 @@ with open("projects-section.html", "w", encoding="utf-8") as file:
 with open("index.html", "r", encoding="utf-8") as file:
     index_html = file.read()
 
-start_marker = '        <h3 class="projects-group-title">Featured'
-end_marker = '    </section>\n\n    <section class="contact" id="contact">'
-start = index_html.find(start_marker)
-end = index_html.find(end_marker)
-if start == -1 or end == -1:
-    raise SystemExit("Could not find projects section markers in index.html")
+projects_start = index_html.find('<section class="projects" id="projects">')
+contact_start = index_html.find('<section class="contact" id="contact">')
+if projects_start == -1 or contact_start == -1:
+    raise SystemExit("Could not find projects section in index.html")
 
-updated_index = index_html[:start] + output + "\n\n" + index_html[end:]
+projects_end = index_html.rfind("</section>", projects_start, contact_start) + len("</section>")
+
+projects_header = """    <section class="projects" id="projects">
+        <h2 class="heading">Projects</h2>
+        <p class="projects-subtitle">Featured web projects with live demos, plus coursework and personal builds on
+            GitHub.</p>
+
+"""
+
+updated_index = (
+    index_html[:projects_start]
+    + projects_header
+    + output
+    + "\n\n    </section>\n\n"
+    + index_html[projects_end:]
+)
 with open("index.html", "w", encoding="utf-8") as file:
     file.write(updated_index)
 

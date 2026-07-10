@@ -25,3 +25,4 @@ Default Live Server port in this project: **5501** (see `.vscode/settings.json`)
 ## Deploy
 
 Hosted on **GitHub Pages** with custom domain via `CNAME`.
+
